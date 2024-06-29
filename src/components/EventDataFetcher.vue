@@ -2,12 +2,32 @@
   <div class="container mx-auto p-4">
     <div class="flex justify-between items-center mb-6">
       <h1 class="text-2xl font-bold">Stellar Events Data Fetcher (Vue)</h1>
-      <button
+      <h2 class="text-xl font-bold text-gray-700">
+        Contract ID:
+        <a
+          class="text-red-300 underline"
+          href="https://stellar.expert/explorer/testnet/contract/CC6MWZMG2JPQEENRL7XVICAY5RNMHJ2OORMUHXKRDID6MNGXSSOJZLLF"
+          >CC6MWZMG2JPQEENRL7XVICAY5RNMHJ2OORMUHXKRDID6MNGXSSOJZLLF</a
+        >
+      </h2>
+      <!-- <button
         @click="logout"
         class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
       >
         Logout
-      </button>
+      </button> -->
+    </div>
+    <div class="flex justify-between">
+      <h2 class="text-xl font-bold">
+        Contract Code:
+        <a
+          class="text-red-300 underline"
+          href="https://github.com/stellar/soroban-examples/tree/main/events"
+          >Events</a
+        >
+      </h2>
+      <!-- environment -->
+      <h2 class="text-xl font-bold text-gray-700">Environment: Testnet</h2>
     </div>
     <div v-if="loading" class="text-center text-gray-500">Loading data...</div>
     <div v-if="error" class="text-center text-red-500">

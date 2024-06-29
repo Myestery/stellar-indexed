@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Stellar Events Data Fetcher (Vue)</h1>
+    <!-- <h1>Stellar Events Data Fetcher (Vue)</h1> -->
     <EventDataFetcher />
   </div>
 </template>
