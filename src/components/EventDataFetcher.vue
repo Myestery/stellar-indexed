@@ -10,12 +10,26 @@
           >CC6MWZMG2JPQEENRL7XVICAY5RNMHJ2OORMUHXKRDID6MNGXSSOJZLLF</a
         >
       </h2>
+
       <!-- <button
         @click="logout"
         class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
       >
         Logout
       </button> -->
+    </div>
+    <div>
+      <h3>Run the code below to invoke the contract</h3>
+      <pre class="bg-gray-100 p-4 rounded-lg">
+        <code class="language-javascript">
+          stellar contract invoke \
+          --id CC6MWZMG2JPQEENRL7XVICAY5RNMHJ2OORMUHXKRDID6MNGXSSOJZLLF \
+          --source alice \
+          --network testnet \
+          -- \
+          increment
+        </code>
+      </pre>
     </div>
     <div class="flex justify-between">
       <h2 class="text-xl font-bold">
