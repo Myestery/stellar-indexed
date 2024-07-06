@@ -10,7 +10,7 @@ import { createApp } from 'vue'
 // Prompt the user for the API token
 // const userToken = tokenFromLocalStorage || prompt("Please enter your API token:");
 // localStorage.setItem('lastUsedToken', userToken)
-const userToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoibXllc3RlcnkiLCJleHAiOjE3MjAyNjUwODAsInVzZXJfaWQiOjg3LCJ1c2VybmFtZSI6InBvbHltZW5qb2huMUBnbWFpbC5jb20iLCJpYXQiOjE3MTk2NjAyODAsImF1ZCI6InBvc3RncmFwaGlsZSIsImlzcyI6InBvc3RncmFwaGlsZSJ9.RD6xcW1uzEBbUKXpdsVRcB692KcLturOaDhQ5UskySs"
+const userToken = import.meta.env.VITE_API_TOKEN
 
 const httpLink = createHttpLink({
   uri: 'https://api.mercurydata.app:2083/graphql',

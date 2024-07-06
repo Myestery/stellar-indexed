@@ -6,12 +6,15 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "prebuild": "node login",
     "preview": "vite preview"
   },
   "dependencies": {
     "@apollo/client": "^3.10.8",
     "@stellar/stellar-sdk": "^12.1.0",
     "@vue/apollo-composable": "^4.0.2",
+    "dotenv": "^16.4.5",
+    "form-data": "^4.0.0",
     "graphql": "^16.9.0",
     "graphql-tag": "^2.12.6",
     "vue": "^3.4.29",
