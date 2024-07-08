@@ -6,6 +6,7 @@
         Contract ID:
         <a
           class="text-red-300 underline"
+          target="_blank"
           href="https://stellar.expert/explorer/testnet/contract/CC6MWZMG2JPQEENRL7XVICAY5RNMHJ2OORMUHXKRDID6MNGXSSOJZLLF"
           >CC6MWZMG2JPQEENRL7XVICAY5RNMHJ2OORMUHXKRDID6MNGXSSOJZLLF</a
         >

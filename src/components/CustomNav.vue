@@ -23,6 +23,6 @@ const navItems = ref([
   { name: "Indexed Contract", path: "/" },
   { name: "Fee estimation", path: "/fee-estimation" },
   { name: "Fee simulation", path: "/fee-simulation" },
-  { name: "Fee history tracking", path: "/fee-history-tracking" },
+  { name: "Fee history", path: "/fee-history" },
 ]);
 </script>

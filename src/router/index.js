@@ -16,17 +16,17 @@ const router = createRouter({
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import("../views/Calculator.vue"),
+      component: () => import("../views/FeeEstimation.vue"),
     },
     {
       name: "Fee simulation",
       path: "/fee-simulation",
-      component: () => import("../views/HomeView.vue"),
+      component: () => import("../views/FeeSimulation.vue"),
     },
     {
       name: "Fee history tracking",
-      path: "/fee-history-tracking",
-      component: () => import("../views/HomeView.vue"),
+      path: "/fee-history",
+      component: () => import("../views/FeeHistory.vue"),
     },
   ],
 });
