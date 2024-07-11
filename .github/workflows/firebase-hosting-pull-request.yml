@@ -19,8 +19,7 @@ jobs:
       - uses: actions/checkout@v2
       - run: yarn && yarn build
         env:
-            MERCURY_EMAIL: ${{ secrets.MERCURY_EMAIL }}
-            MERCURY_PASSWORD: ${{ secrets.MERCURY_PASSWORD }}
+            VITE_API_TOKEN: ${{ secrets.VITE_API_TOKEN }}
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'

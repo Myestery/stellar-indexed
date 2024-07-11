@@ -1,5 +1,5 @@
 <script setup>
-import EventDataFetcher from "@/components/EventDataFetcher.vue";
+import EventDataFetcher from "@/components/TokenList.vue";
 </script>
 
 <template>
