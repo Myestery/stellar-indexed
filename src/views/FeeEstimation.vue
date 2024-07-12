@@ -54,7 +54,7 @@
 
     <div class="mt-4">
       <label class="block text-sm font-medium text-gray-700"
-        >Effective Base Fee (in stroops)</label
+        >Effective Inclusion fee (in stroops)</label
       >
       <input
         v-model.number="effectiveBaseFee"
@@ -112,7 +112,7 @@
             >Minimum Fee Calculation</label
           >
           <p>
-            Number of Operations: {{ operations.length }} * Effective Base Fee:
+            Number of Operations: {{ operations.length }} * Effective Inclusion fee:
             {{ effectiveBaseFee }} + Estimated Resource Fee:
             {{ estimatedResourceFee }} = {{ estimatedFee }} stroops
           </p>
@@ -219,46 +219,54 @@ const calculateFee = async () => {
   estimatedFee.value = numOperations * baseFee + estimatedResourceFee.value;
 };
 
-async function queryRecentFees(horizonUrl = "https://soroban-testnet.stellar.org") {
+async function queryRecentFees(
+  sorobanUrl = "https://soroban-testnet.stellar.org"
+) {
   try {
-    const response = await axios.get(`${horizonUrl}/fee_stats`);
-    const feeStats = response.data;
+    const response = await axios.post(`${sorobanUrl}`, {
+      jsonrpc: "2.0",
+      id: 8675309,
+      method: "getFeeStats",
+    });
+    const feeStats = response.data.result;
 
     return {
-      lastLedgerBaseFee: parseInt(feeStats.last_ledger_base_fee, 10),
-      lastLedger: parseInt(feeStats.last_ledger, 10),
-      ledgerCapacityUsage: parseFloat(feeStats.ledger_capacity_usage),
-      feeCharged: {
-        min: parseInt(feeStats.fee_charged.min, 10),
-        mode: parseInt(feeStats.fee_charged.mode, 10),
-        p10: parseInt(feeStats.fee_charged.p10, 10),
-        p20: parseInt(feeStats.fee_charged.p20, 10),
-        p30: parseInt(feeStats.fee_charged.p30, 10),
-        p40: parseInt(feeStats.fee_charged.p40, 10),
-        p50: parseInt(feeStats.fee_charged.p50, 10),
-        p60: parseInt(feeStats.fee_charged.p60, 10),
-        p70: parseInt(feeStats.fee_charged.p70, 10),
-        p80: parseInt(feeStats.fee_charged.p80, 10),
-        p90: parseInt(feeStats.fee_charged.p90, 10),
-        p95: parseInt(feeStats.fee_charged.p95, 10),
-        p99: parseInt(feeStats.fee_charged.p99, 10),
-        max: parseInt(feeStats.fee_charged.max, 10),
+      lastLedgerInclusionFee: {
+        min: parseInt(feeStats.sorobanInclusionFee.min, 10),
+        mode: parseInt(feeStats.sorobanInclusionFee.mode, 10),
+        p10: parseInt(feeStats.sorobanInclusionFee.p10, 10),
+        p20: parseInt(feeStats.sorobanInclusionFee.p20, 10),
+        p30: parseInt(feeStats.sorobanInclusionFee.p30, 10),
+        p40: parseInt(feeStats.sorobanInclusionFee.p40, 10),
+        p50: parseInt(feeStats.sorobanInclusionFee.p50, 10),
+        p60: parseInt(feeStats.sorobanInclusionFee.p60, 10),
+        p70: parseInt(feeStats.sorobanInclusionFee.p70, 10),
+        p80: parseInt(feeStats.sorobanInclusionFee.p80, 10),
+        p90: parseInt(feeStats.sorobanInclusionFee.p90, 10),
+        p95: parseInt(feeStats.sorobanInclusionFee.p95, 10),
+        p99: parseInt(feeStats.sorobanInclusionFee.p99, 10),
+        transactionCount: parseInt(
+          feeStats.sorobanInclusionFee.transactionCount,
+          10
+        ),
+        ledgerCount: parseInt(feeStats.sorobanInclusionFee.ledgerCount, 10),
       },
-      maxFee: {
-        min: parseInt(feeStats.max_fee.min, 10),
-        mode: parseInt(feeStats.max_fee.mode, 10),
-        p10: parseInt(feeStats.max_fee.p10, 10),
-        p20: parseInt(feeStats.max_fee.p20, 10),
-        p30: parseInt(feeStats.max_fee.p30, 10),
-        p40: parseInt(feeStats.max_fee.p40, 10),
-        p50: parseInt(feeStats.max_fee.p50, 10),
-        p60: parseInt(feeStats.max_fee.p60, 10),
-        p70: parseInt(feeStats.max_fee.p70, 10),
-        p80: parseInt(feeStats.max_fee.p80, 10),
-        p90: parseInt(feeStats.max_fee.p90, 10),
-        p95: parseInt(feeStats.max_fee.p95, 10),
-        p99: parseInt(feeStats.max_fee.p99, 10),
-        max: parseInt(feeStats.max_fee.max, 10),
+      feeCharged: {
+        min: parseInt(feeStats.inclusionFee.min, 10),
+        mode: parseInt(feeStats.inclusionFee.mode, 10),
+        p10: parseInt(feeStats.inclusionFee.p10, 10),
+        p20: parseInt(feeStats.inclusionFee.p20, 10),
+        p30: parseInt(feeStats.inclusionFee.p30, 10),
+        p40: parseInt(feeStats.inclusionFee.p40, 10),
+        p50: parseInt(feeStats.inclusionFee.p50, 10),
+        p60: parseInt(feeStats.inclusionFee.p60, 10),
+        p70: parseInt(feeStats.inclusionFee.p70, 10),
+        p80: parseInt(feeStats.inclusionFee.p80, 10),
+        p90: parseInt(feeStats.inclusionFee.p90, 10),
+        p95: parseInt(feeStats.inclusionFee.p95, 10),
+        p99: parseInt(feeStats.inclusionFee.p99, 10),
+        transactionCount: parseInt(feeStats.inclusionFee.transactionCount, 10),
+        ledgerCount: parseInt(feeStats.inclusionFee.ledgerCount, 10),
       },
     };
   } catch (error) {
@@ -270,7 +278,7 @@ async function queryRecentFees(horizonUrl = "https://soroban-testnet.stellar.org
 async function displayFeeStats() {
   try {
     const feeStats = await queryRecentFees();
-    console.log("Recommended base fee (mode):", feeStats.feeCharged.mode);
+    console.log("Recommended inclusion fee (mode):", feeStats.feeCharged.mode);
     return +feeStats.feeCharged.mode;
   } catch (error) {
     console.error("Failed to fetch fee stats");
@@ -307,5 +315,4 @@ async function calculateSimulatedContractFee() {
 function stroopsToXLM(stroops) {
   return stroops / 10000000;
 }
-
 </script>
