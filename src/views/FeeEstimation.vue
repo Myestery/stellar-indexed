@@ -219,7 +219,7 @@ const calculateFee = async () => {
   estimatedFee.value = numOperations * baseFee + estimatedResourceFee.value;
 };
 
-async function queryRecentFees(horizonUrl = "https://horizon.stellar.org") {
+async function queryRecentFees(horizonUrl = "https://soroban-testnet.stellar.org") {
   try {
     const response = await axios.get(`${horizonUrl}/fee_stats`);
     const feeStats = response.data;
