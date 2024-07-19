@@ -112,8 +112,8 @@
             >Minimum Fee Calculation</label
           >
           <p>
-            Number of Operations: {{ operations.length }} * Effective Inclusion fee:
-            {{ effectiveBaseFee }} + Estimated Resource Fee:
+            Number of Operations: {{ operations.length }} * Effective Inclusion
+            fee: {{ effectiveBaseFee }} + Estimated Resource Fee:
             {{ estimatedResourceFee }} = {{ estimatedFee }} stroops
           </p>
         </div>
@@ -150,6 +150,8 @@
 </template>
 
 <script setup>
+import { useNetworkSwitch } from "@/composables/useNetworkSwitch";
+const { rpcUrl } = useNetworkSwitch();
 import { ref, onMounted, watch } from "vue";
 import axios from "axios";
 
@@ -219,9 +221,7 @@ const calculateFee = async () => {
   estimatedFee.value = numOperations * baseFee + estimatedResourceFee.value;
 };
 
-async function queryRecentFees(
-  sorobanUrl = "https://soroban-testnet.stellar.org"
-) {
+async function queryRecentFees(sorobanUrl = rpcUrl.value) {
   try {
     const response = await axios.post(`${sorobanUrl}`, {
       jsonrpc: "2.0",
@@ -290,7 +290,7 @@ async function calculateSimulatedContractFee() {
     "AAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABRyoAAAAAAAAAAQAAAAAAAAAAAAAAAQAAAAAAAAAYAAAAAAAAAAG8y2WG0l8CEbFf71QIGOxaw6dOdFlD3VEaB+Y015ScnAAAAAlpbmNyZW1lbnQAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAQAAAAdMSC8tQWY0Oc3+5mvhIoKetH7RtJJYiryScql8k0EKRQAAAAEAAAAGAAAAAbzLZYbSXwIRsV/vVAgY7FrDp050WUPdURoH5jTXlJycAAAAFAAAAAEACRkYAAAD0AAAAIQAAAAAAAFGxgAAAAA=";
 
   const response = await axios.post(
-    "https://soroban-testnet.stellar.org:443",
+    `${rpcUrl.value}`,
     {
       jsonrpc: "2.0",
       id: 8675309,

@@ -127,7 +127,16 @@ import { Buffer } from "buffer";
 import { ref } from "vue";
 import * as StellarSdk from "@stellar/stellar-sdk";
 // import { Server } from "@stellar/stellar-sdk/rpc";
-import { assembleTransaction } from "@stellar/stellar-sdk/rpc";
+import { useNetworkSwitch } from "@/composables/useNetworkSwitch";
+import { prepareTransaction } from "@stellar/stellar-sdk/rpc";
+import {
+  isConnected,
+  setAllowed,
+  getPublicKey,
+  signAuthEntry,
+  signTransaction,
+  signBlob,
+} from "@stellar/freighter-api";
 window.Buffer = window.Buffer || Buffer;
 
 export default {
@@ -139,10 +148,9 @@ export default {
     const contractParams = ref([]);
     const result = ref("");
     const feeSetting = ref(100);
+    const { rpcUrl, isMainnet } = useNetworkSwitch();
 
-    const server = new StellarSdk.SorobanRpc.Server(
-      "https://soroban-testnet.stellar.org"
-    );
+    const server = new StellarSdk.SorobanRpc.Server(rpcUrl.value);
     const sourceSecretKey =
       "SBFNHYKPKP2PVBWEPFYKJ2PZJ4YGL457EGWOKTOUYN7NHV3TIJMXHDZ5";
     const accountId =
@@ -177,13 +185,27 @@ export default {
           result.value = "XDR transaction processing not implemented";
         } else {
           // Process contract transaction
+
+          // if using mainnet, must use freighter
+          let hasFreighter = await isConnected();
+          if (!hasFreighter && isMainnet.value) {
+            return alert(
+              "Freighter wallet is required for mainnet transactions"
+            );
+          }
+          const isAllowed = await setAllowed();
+          if (!isAllowed) {
+            return alert("Please allow the transaction in Freighter wallet");
+          }
           const contract = new StellarSdk.Contract(contractAddress.value);
           const account = await server.getAccount(accountId);
           const fee = String(feeSetting.value);
 
           const transaction = new StellarSdk.TransactionBuilder(account, {
             fee,
-            networkPassphrase: StellarSdk.Networks.TESTNET,
+            networkPassphrase: isMainnet
+              ? StellarSdk.Networks.PUBLIC
+              : StellarSdk.Networks.TESTNET,
           })
             .setTimeout(30)
             .addOperation(
@@ -195,21 +217,27 @@ export default {
               )
             )
             .build();
-          //   console.log(transaction, transaction.toXDR());
-          console.log(
-            new StellarSdk.Transaction(
-              transaction.toXDR(),
-              StellarSdk.Networks.TESTNET
-            )
-          );
-          let preparedTransaction = await server.prepareTransaction(
-            transaction
-          );
-          preparedTransaction.sign(sourceKeypair);
+
+          let preparedTransaction = await server.prepareTransaction(transaction);
+          let signedTransaction;
+          if (hasFreighter) {
+            let signedXDR = await signTransaction(
+              preparedTransaction.toEnvelope().toXDR("base64")
+            );
+            signedTransaction = StellarSdk.TransactionBuilder.fromXDR(
+              signedXDR,
+              isMainnet
+                ? StellarSdk.Networks.PUBLIC
+                : StellarSdk.Networks.TESTNET
+            );
+          } else {
+            preparedTransaction.sign(sourceKeypair);
+            signedTransaction = preparedTransaction;
+          }
           result.value = preparedTransaction.toEnvelope().toXDR("base64");
 
           // try to simulate the transaction
-          const res = await server.simulateTransaction(transaction);
+          const res = await server.simulateTransaction(signedTransaction);
           console.log(res);
           result.value = {
             minResourceFee: res.minResourceFee,
