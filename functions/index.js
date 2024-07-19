@@ -6,10 +6,9 @@ import { onRequest } from "firebase-functions/v2/https";
 initializeApp();
 
 // Define configuration parameters
-const QuickNodeURL = defineString("QUICKNODE_URL").value()
+const QuickNodeURL = defineString("QUICKNODE_URL").value();
 const db = getFirestore();
 const QUICKNODE_USAGE_PER_DAY = 166_166;
-
 
 const Limiter = async () => {
   const dateKey = new Date().toISOString().split("T")[0];
@@ -21,26 +20,34 @@ const Limiter = async () => {
       const currentRate = data[dateKey] || 0;
 
       if (currentRate >= QUICKNODE_USAGE_PER_DAY) {
-        res.status(400).send({ error: "Usage exceeded" });
-        return;
+        return false;
       }
 
       await docRef.update({
         [dateKey]: admin.firestore.FieldValue.increment(1),
       });
+      return true;
+      
     } else {
       await docRef.set({
         [dateKey]: 1,
       });
+      return true;
     }
   } catch (error) {
     console.error("Error updating rate: ", error);
-    res.status(500).send({ error: "Internal server error" });
   }
 };
 
 export const quickNodeQuery = onRequest({ cors: ["*"] }, async (req, res) => {
-  await Limiter();
+  let status = await Limiter();
+  if (!status) {
+    res.status(429).send({
+      error: "Rate limit exceeded",
+      message: "You have exceeded the daily rate limit",
+    });
+    return;
+  }
   const body = req.body;
   // send the query to quicknode
   try {
@@ -49,13 +56,11 @@ export const quickNodeQuery = onRequest({ cors: ["*"] }, async (req, res) => {
     res.status(200).send(result);
   } catch (error) {
     console.error("Error querying QuickNode: ", error);
-    res
-      .status(500)
-      .send({
-        error: "Internal server error",
-        message: error.message,
-        data: error.response?.data,
-      });
+    res.status(500).send({
+      error: "Internal server error",
+      message: error.message,
+      data: error.response?.data,
+    });
   }
 });
 
