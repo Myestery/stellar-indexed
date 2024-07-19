@@ -1,6 +1,6 @@
-const { defineString } = require("firebase-functions/params");
-const { initializeApp } = require("firebase-admin/app");
-const { onRequest } = require("firebase-functions/v2/https");
+import { defineString } from "firebase-functions/params";
+import { initializeApp } from "firebase-admin/app";
+import { onRequest } from "firebase-functions/v2/https";
 
 initializeApp();
 
