@@ -6,7 +6,7 @@ import { onRequest } from "firebase-functions/v2/https";
 initializeApp();
 
 // Define configuration parameters
-const QuickNodeURL = defineString("QUICKNODE_URL");
+const QuickNodeURL = defineString("QUICKNODE_URL").value()
 const db = getFirestore();
 const QUICKNODE_USAGE_PER_DAY = 166_166;
 
