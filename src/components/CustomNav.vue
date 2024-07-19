@@ -13,16 +13,25 @@
           {{ item.name }}
         </router-link>
       </li>
+
+      <div class="block px-6 py-2 text-gray-600">
+        <small>Network</small>
+        <NetworkSwitch />
+      </div>
     </ul>
   </nav>
 </template>
 
 <script setup>
 import { ref } from "vue";
+import { useNetworkSwitch } from "@/composables/useNetworkSwitch";
+import NetworkSwitch from "@/components/NetworkSwitch.vue";
+const { network } = useNetworkSwitch();
 const navItems = ref([
   { name: "Indexed Contract", path: "/" },
   { name: "Fee estimation", path: "/fee-estimation" },
   { name: "Fee simulation", path: "/fee-simulation" },
   { name: "Fee history", path: "/fee-history" },
 ]);
+// props to show network
 </script>
