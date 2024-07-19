@@ -6,8 +6,8 @@ import { onRequest } from "firebase-functions/v2/https";
 initializeApp();
 
 // Define configuration parameters
-const QuickNodeURL = defineString("QUICKNODE_URL").value();
-const db = getFirestore();
+const QuickNodeURL = defineString("QUICKNODE_URL");
+const db = getFirestore("rates");
 const QUICKNODE_USAGE_PER_DAY = 166_166;
 
 const Limiter = async () => {
@@ -53,7 +53,7 @@ export const quickNodeQuery = onRequest({ cors: ["*"] }, async (req, res) => {
   const body = req.body;
   // send the query to quicknode
   try {
-    const req = await axios.post(QuickNodeURL, body);
+    const req = await axios.post(QuickNodeURL.value(), body);
     const result = req.data;
     res.status(200).send(result);
   } catch (error) {
