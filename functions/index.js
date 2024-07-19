@@ -24,14 +24,16 @@ const Limiter = async () => {
       }
 
       await docRef.update({
-        [dateKey]: admin.firestore.FieldValue.increment(1),
+        [dateKey]: currentRate + 1,
       });
       return true;
       
     } else {
-      await docRef.set({
+      // create the document
+      await db.collection("rates").doc("days").set({
         [dateKey]: 1,
       });
+
       return true;
     }
   } catch (error) {
