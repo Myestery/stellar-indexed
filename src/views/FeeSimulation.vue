@@ -155,7 +155,7 @@ export default {
     //   "SBFNHYKPKP2PVBWEPFYKJ2PZJ4YGL457EGWOKTOUYN7NHV3TIJMXHDZ5";
     // const accountId =
     //   "GCD2XWYQOOKD2GEVAEYFABLSN735KARTHQBGWBTOPGEIACLOLM5HYOGD";
-    const sourceKeypair = StellarSdk.Keypair.fromSecret(sourceSecretKey);
+    // const sourceKeypair = StellarSdk.Keypair.fromSecret(sourceSecretKey);
 
     const validTypes = [
       "i32",
