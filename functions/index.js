@@ -7,7 +7,7 @@ initializeApp();
 // Define configuration parameters
 const QuickNodeURL = defineString("QUICKNODE_URL");
 
-exports.length = onRequest({ cors: ["*"] }, async (req, res) => {
+export const length = onRequest({ cors: ["*"] }, async (req, res) => {
   //   return the length of the string
   const result = {
     message: "Hello from Firebase!",
