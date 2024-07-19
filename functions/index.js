@@ -10,14 +10,6 @@ const QuickNodeURL = defineString("QUICKNODE_URL").value()
 const db = getFirestore();
 const QUICKNODE_USAGE_PER_DAY = 166_166;
 
-export const length = onRequest({ cors: ["*"] }, async (req, res) => {
-  //   return the length of the string
-  const result = {
-    message: "Hello from Firebase!",
-    length: QuickNodeURL,
-  };
-  res.status(200).send(result);
-});
 
 const Limiter = async () => {
   const dateKey = new Date().toISOString().split("T")[0];
