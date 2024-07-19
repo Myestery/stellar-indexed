@@ -151,10 +151,10 @@ export default {
     const { rpcUrl, isMainnet } = useNetworkSwitch();
 
     const server = new StellarSdk.SorobanRpc.Server(rpcUrl.value);
-    const sourceSecretKey =
-      "SBFNHYKPKP2PVBWEPFYKJ2PZJ4YGL457EGWOKTOUYN7NHV3TIJMXHDZ5";
-    const accountId =
-      "GCD2XWYQOOKD2GEVAEYFABLSN735KARTHQBGWBTOPGEIACLOLM5HYOGD";
+    // const sourceSecretKey =
+    //   "SBFNHYKPKP2PVBWEPFYKJ2PZJ4YGL457EGWOKTOUYN7NHV3TIJMXHDZ5";
+    // const accountId =
+    //   "GCD2XWYQOOKD2GEVAEYFABLSN735KARTHQBGWBTOPGEIACLOLM5HYOGD";
     const sourceKeypair = StellarSdk.Keypair.fromSecret(sourceSecretKey);
 
     const validTypes = [
@@ -197,6 +197,7 @@ export default {
           if (!isAllowed) {
             return alert("Please allow the transaction in Freighter wallet");
           }
+          const accountId = await getPublicKey();
           const contract = new StellarSdk.Contract(contractAddress.value);
           const account = await server.getAccount(accountId);
           const fee = String(feeSetting.value);
@@ -218,22 +219,22 @@ export default {
             )
             .build();
 
-          let preparedTransaction = await server.prepareTransaction(transaction);
+          let preparedTransaction = await server.prepareTransaction(
+            transaction
+          );
           let signedTransaction;
-          if (hasFreighter) {
-            let signedXDR = await signTransaction(
-              preparedTransaction.toEnvelope().toXDR("base64")
-            );
-            signedTransaction = StellarSdk.TransactionBuilder.fromXDR(
-              signedXDR,
-              isMainnet
-                ? StellarSdk.Networks.PUBLIC
-                : StellarSdk.Networks.TESTNET
-            );
-          } else {
-            preparedTransaction.sign(sourceKeypair);
-            signedTransaction = preparedTransaction;
-          }
+
+          let signedXDR = await signTransaction(
+            preparedTransaction.toEnvelope().toXDR("base64")
+          );
+          signedTransaction = StellarSdk.TransactionBuilder.fromXDR(
+            signedXDR,
+            isMainnet ? StellarSdk.Networks.PUBLIC : StellarSdk.Networks.TESTNET
+          );
+          // } else {
+          //   preparedTransaction.sign(sourceKeypair);
+          //   signedTransaction = preparedTransaction;
+          // }
           result.value = preparedTransaction.toEnvelope().toXDR("base64");
 
           // try to simulate the transaction
